@@ -1,0 +1,211 @@
+swagger: '2.0'
+info:
+  title: OFGEM Central Switching Service
+  description: >-
+    This API is the SSE representation of the OFGEM Central Switching Service (CSS).  The API has been created to allow various Alpha projects to interact with the CSS prior to publication of the initial OFGEM service due in October 2019.
+    
+    Functions and data elements have been defined based on data available in ABACUS.  This API is for testing purposes only within the SSE OSP Programme.
+    
+  version: '1.0'
+host: serverRoot
+basePath: /ssealpha/centralswitchingservice/v1.0/
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /registrationmanagement:
+
+    post:
+      operationId: requestswitch
+      summary: Create a switch request
+      tags:
+        - request switch
+      parameters:
+        - schema:
+            $ref: '#/definitions/SwitchRequest'
+          required: true
+          in: body
+          name: communicationMessage
+          description: The switch request
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/SwitchRequestResponse'
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/Error'
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/Error'
+        '405':
+          description: Method Not allowed
+          schema:
+            $ref: '#/definitions/Error'
+        '409':
+          description: Conflict
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/Error'
+  
+definitions:
+
+  SwitchRequest:
+    type: object
+    description: >-
+      The switch request allows SSE to initiate a supplier Gain for Electricity, Gas or Dual Fuel with the Central Switching Service
+
+    required:
+      - erroneousSwitchResolutionIndicator
+      - changeOfOccupancyIndicator
+      - domesticSwitch
+      - switchEffectiveDate
+      - supplierMarketParticipantRoleIdentifier
+      - shipperMarketParticipantRoleIdentifier
+      - oneFailAllFailGroupIdentifier
+      - meterPointReferenceNumber
+      - meterPointAdministrationNumber
+      - meterPointDirectionOfFlow
+      - fuelType
+      - supplierSwitchIdentifier
+      - requestType
+    properties:
+      supplierSwitchIdentifier:
+        type: string
+        description: The suppliers unique reference for the switch request
+      erroneousSwitchResolutionIndicator:
+        type: boolean
+        description: Indicates if the switch is part of an erroneous transfer
+      changeOfOccupancyIndicator:
+        type: boolean
+        description: Is the switch also a change of tenancy.
+      domesticSwitch:
+        type: boolean
+        description: Is the switch for a domestic property / service
+      switchEffectiveDate:
+        type: string
+        format: date-time
+        description: The date the customer has indicated that the switch should be activated
+      supplierMarketParticipantRoleIdentifier:
+        type: string
+        description: The market participant ID of the gaining supplier
+      shipperMarketParticipantRoleIdentifier:
+        type: string
+        description: The market participant ID of the gas shipper
+      oneFailAllFailGroupIdentifier:
+        type: string
+        description: A grouping value that links multiple requests, so that if one request fails the associated requests should also fail.
+      meterPointReferenceNumber:
+        type: string
+        description: Gas meter point reference number
+      meterPointAdministrationNumber:
+        type: string
+        description: Electricity meter point administration number
+      meterPointDirectionOfFlow:
+        type: string
+        description: Import or Export
+      fuelType:
+        type: string
+        description: E (Electricity) or G (Gas)
+      requestType:
+        type: string
+        description: CSS Transaction type
+
+
+  SwitchRequestResponse:
+    type: object
+    description: >-
+      The switch request allows SSE to initiate a supplier Gain for Electricity, Gas or Dual Fuel with the Central Switching Service
+
+    properties:
+      cssSwitchIdentifier:
+        type: string
+        description: OFGEN CSS unique reference fo rthe switch request
+      supplierSwitchIdentifier:
+        type: string
+        description: The suppliers unique referecne for the switch request
+      erroneousSwitchResolutionIndicator:
+        type: boolean
+        description: Indicates if the switch is part of an erroneous transfer
+      changeOfOccupancyIndicator:
+        type: boolean
+        description: Is the switch also a change of tenancy.
+      domesticSwitch:
+        type: boolean
+        description: Is the switch for a domestic property / service
+      switchEffectiveDate:
+        type: string
+        format: date-time
+        description: The date the customer has indicated that the switch should be activated
+      supplierMarketParticipantRoleIdentifier:
+        type: string
+        description: The market participant ID of the gaining supplier
+      shipperMarketParticipantRoleIdentifier:
+        type: string
+        description: The market participant ID of the gas shipper
+      oneFailAllFailGroupIdentifier:
+        type: string
+        description: A grouping value that links multiple requests, so that if one request fails the associated requests should also fail.
+      meterPointReferenceNumber:
+        type: string
+        description: Gas meter point reference number
+      meterPointAdministrationNumber:
+        type: string
+        description: Electricity meter point administration number
+      meterPointDirectionOfFlow:
+        type: string
+        description: Import or Export
+      fuelType:
+        type: string
+        description: E (Electricity) or G (Gas)
+      requestType:
+        type: string
+        description: CSS Transaction type
+        
+        
+  Error:
+    required:
+      - code
+      - reason
+    properties:
+      code:
+        type: integer
+        description: Application related code.
+      reason:
+        type: integer
+        description: Text that explains the reason for error.
+      message:
+        type: string
+        description: >-
+          (optional) Text that provide more details and corrective actions
+          related to the error.
+      status:
+        type: integer
+        description: (optional) http error code extension like 400-2
+      referenceError:
+        type: string
+        description: >-
+          (optional) A URL to online documentation that provides more
+          information about the error.
+      '@type':
+        type: string
+        description: (optional) The class type of a REST resource.
+      '@schemaLocation':
+        type: string
+        description: (optional) A link to the schema describing a REST resource.
